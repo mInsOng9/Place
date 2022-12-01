@@ -1,11 +1,11 @@
-package com.song.tpplacesearch.activities
+package com.song.wheretogo.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
-class SignupActivity : AppCompatActivity() {
+class EmailLoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_signup)
+        //setContentView(R.layout.activity_email_login)
     }
 }

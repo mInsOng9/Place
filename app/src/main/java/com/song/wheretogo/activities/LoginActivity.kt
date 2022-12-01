@@ -1,11 +1,11 @@
-package com.song.tpplacesearch.activities
+package com.song.wheretogo.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Toast
-import com.song.tpplacesearch.databinding.ActivityLoginBinding
+import com.song.wheretogo.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
     val binding:ActivityLoginBinding by lazy { ActivityLoginBinding.inflate(LayoutInflater.from(this)) }

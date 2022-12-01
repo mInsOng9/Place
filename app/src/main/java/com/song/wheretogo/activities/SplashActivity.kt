@@ -1,4 +1,4 @@
-package com.song.tpplacesearch.activities
+package com.song.wheretogo.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
