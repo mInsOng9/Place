@@ -6,6 +6,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.tasks.Task
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
@@ -79,8 +87,36 @@ class LoginActivity : AppCompatActivity() {
         }
     }
     fun clickedLoginGoogle(){
-        //구글 로그인 화면(액티비티)를 실행하여 결과를 받아와서 사용자정보 취득
+        //구글 로그인 화면(액티비티)를 실행하여 결과를 받아와서 사용자정보 취득 - android google login 검색
+
+        //구글 로그인 옵션객체 생성 - Builder 이숑
+        val signInOptions:GoogleSignInOptions=GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
+
+        //극,ㄹ 럭,ㅇ;ㄴ허ㅣ먄
+        val intetn=GoogleSignIn.getClient(this,signInOptions).signInIntent
+        googleResultLauncher.launch(intent)
     }
+    val googleResultLauncher:ActivityResultLauncher<Intent> =registerForActivityResult(ActivityResultContracts.StartActivityForResult(),object:
+        ActivityResultCallback<ActivityResult> {
+        override fun onActivityResult(result: ActivityResult?) {
+            //로그인 결과를 가져온 인텐트 객체 소환
+            val intent:Intent? = result?.data
+            //돌아온 인텐트객체에게 구글 계정정보를 빼오기
+            val task: Task<GoogleSignInAccount> =GoogleSignIn.getSignedInAccountFromIntent(intent)
+
+            val account:GoogleSignInAccount=task.result
+
+            val id:String=account.id.toString()
+            val email=account.email ?:""
+
+            Toast.makeText(this@LoginActivity, "Google Login Success : $email", Toast.LENGTH_SHORT).show()
+            G.userAccount= UserAccount(id,email)
+
+            //Main 화면으로 wjsghks
+            startActivity(Intent(this@LoginActivity,MainActivity::class.java))
+            finish()
+        }
+    })
     fun clickedLoginNaver(){
         //사용자정보를 취득하는 토큰값을 발급받아 REST API 방식으로 사용자정보를 취득
     }
