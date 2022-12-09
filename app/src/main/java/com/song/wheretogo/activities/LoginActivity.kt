@@ -17,9 +17,15 @@ import com.google.android.gms.tasks.Task
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
+import com.navercorp.nid.NaverIdLoginSDK
+import com.navercorp.nid.oauth.OAuthLoginCallback
 import com.song.wheretogo.G
 import com.song.wheretogo.databinding.ActivityLoginBinding
+import com.song.wheretogo.model.NidUserInfoResponse
 import com.song.wheretogo.model.UserAccount
+import com.song.wheretogo.network.RetrofitApiService
+import com.song.wheretogo.network.RetrofitHelper
+import javax.security.auth.callback.Callback
 
 class LoginActivity : AppCompatActivity() {
     val binding:ActivityLoginBinding by lazy { ActivityLoginBinding.inflate(LayoutInflater.from(this)) }
@@ -119,5 +125,45 @@ class LoginActivity : AppCompatActivity() {
     })
     fun clickedLoginNaver(){
         //사용자정보를 취득하는 토큰값을 발급받아 REST API 방식으로 사용자정보를 취득
+        //네어버 개발자 센터 가이드 문서 참고 - 애플리케이션 등록 완료.
+
+        //네이버아이디로그인(네아로) SDK 초기화
+        NaverIdLoginSDK.initialize(this,"UZ_cyhOSxI3pUOThpWz0","UZ_cyhOSxI3pUOThpWz0","WhereToGo")
+        
+        //네아로 전용버튼 뷰 사용 대신에 직접 로그인 요청 메소드를 사용 
+        NaverIdLoginSDK.authenticate(this, object:OAuthLoginCallback{
+            override fun onError(errorCode: Int, message: String) {
+                Toast.makeText(this@LoginActivity, "error : $message", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onFailure(httpStatus: Int, message: String) {
+                Toast.makeText(this@LoginActivity, "failure: $message", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onSuccess() {
+                Toast.makeText(this@LoginActivity, "login success", Toast.LENGTH_SHORT).show()
+
+                //사용자를 정보를 가져오려면 서버와 Http REsTAPI 통신을 해야함.
+                //단, 필요한 요청파라미터가 있음. 사용자정보에 접속할 수 있는 인증키 같은 값 - 토큰 이라고 부름
+                val accessToken:String?=NaverIdLoginSDK.getAccessToken()
+
+                //토큰값을 확인해보기
+                Log.i("token",accessToken.toString())
+
+                //Retrofit 작업을 통해 사용자 정보 가져오기
+                val retrofit=RetrofitHelper.getRetrofitInstance("https://openapi.naver.com")
+                retrofit.create(RetrofitApiService::class.java).getNidUserInfo("Bearer $accessToken").enqueue(object:Callback<NidUserInfoResponse>{
+
+                    //response: val userInfo:NidUserInfoResponse?=response.body() var id=userInfo?.response?.id?:""
+                    //          var email=userInfo?.response?.email?:""
+                    //          toast:$email
+                    //          G.userAccount=UserAccount(id,email)
+                    //          startActivity(Intent(this,Mainactivity::class.java0)
+                    //          finish()
+                    //failure:회원정보 불러오기 실패 t.message
+                })
+            }
+
+        })
     }
 }
