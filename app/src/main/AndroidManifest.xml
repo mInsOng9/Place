@@ -5,7 +5,9 @@
 
     <!-- 인터넷 사용 권한 설정-->
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <!-- 위치정보제공 권한 설정    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> <!--GPS-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <application
         android:name=".GlobalApplication"
         android:allowBackup="true"

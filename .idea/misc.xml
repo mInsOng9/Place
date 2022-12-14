@@ -3,13 +3,19 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android/Projects/TPPlaceSearch/app/src/main/res/drawable/bg_choice.xml" value="0.165" />
         <entry key="..\:/Android/Projects/TPPlaceSearch/app/src/main/res/drawable/bg_login.xml" value="0.144" />
+        <entry key="..\:/Android/Projects/TPPlaceSearch/app/src/main/res/drawable/bg_search_et.xml" value="0.165" />
         <entry key="..\:/Android/Projects/TPPlaceSearch/app/src/main/res/drawable/bg_tv_go.xml" value="0.144" />
         <entry key="..\:/Android/Projects/TPPlaceSearch/app/src/main/res/drawable/splash.xml" value="0.1225" />
         <entry key="..\:/Android/Projects/TPPlaceSearch/app/src/main/res/layout/activity_email_login.xml" value="0.36614583333333334" />
         <entry key="..\:/Android/Projects/TPPlaceSearch/app/src/main/res/layout/activity_login.xml" value="0.36614583333333334" />
         <entry key="..\:/Android/Projects/TPPlaceSearch/app/src/main/res/layout/activity_main.xml" value="0.36614583333333334" />
         <entry key="..\:/Android/Projects/TPPlaceSearch/app/src/main/res/layout/activity_signup.xml" value="0.36614583333333334" />
+        <entry key="..\:/Android/Projects/TPPlaceSearch/app/src/main/res/layout/choice_list.xml" value="0.150390625" />
+        <entry key="..\:/Android/Projects/TPPlaceSearch/app/src/main/res/layout/fragment_search_list.xml" value="0.20052083333333334" />
+        <entry key="..\:/Android/Projects/TPPlaceSearch/app/src/main/res/layout/fragment_search_map.xml" value="0.20052083333333334" />
+        <entry key="..\:/Android/Projects/TPPlaceSearch/app/src/main/res/menu/option_menu.xml" value="0.20052083333333334" />
       </map>
     </option>
   </component>

@@ -59,4 +59,7 @@ dependencies {
     //Naver login SDK Library
     implementation 'com.navercorp.nid:oauth:5.3.0'
 
+    //Google Fused Location API Library
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+
 }
