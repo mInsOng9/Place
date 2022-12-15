@@ -9,7 +9,10 @@ import android.os.Bundle
 import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
 import com.google.android.material.tabs.TabLayout
@@ -17,6 +20,14 @@ import com.song.wheretogo.R
 import com.song.wheretogo.databinding.ActivityMainBinding
 import com.song.wheretogo.fragments.SearchListFragment
 import com.song.wheretogo.fragments.SearchMapFragment
+import com.song.wheretogo.model.KakaoSearchPlaceResponse
+import com.song.wheretogo.model.Place
+import com.song.wheretogo.model.PlaceMeta
+import com.song.wheretogo.network.RetrofitApiService
+import com.song.wheretogo.network.RetrofitHelper
+import retrofit2.Call
+import retrofit2.Response
+import javax.security.auth.callback.Callback
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,6 +41,9 @@ class MainActivity : AppCompatActivity() {
 
     //[Google Fused API 사용 - 위치정보 라이브러리 play-services-location]
     val providerClient:FusedLocationProviderClient by lazy {LocationServices.getFusedLocationProviderClient(this)}
+
+    //카카오 검색 결과 응답객체 참조변수
+    var searchPlaceResponse:KakaoSearchPlaceResponse?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +73,22 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-        
+
+        // 소프트키보드의 검색버튼 클릭했을때.
+        binding.etSearch.setOnEditorActionListener { textView, i, keyEvent ->
+            searchQuery=binding.etSearch.text.toString()
+            searchPlaces()
+
+            //return 값이 있는 메소드
+            //소프트키보드의 액션버튼이 클릭되었을때 여기서 모든 액션을 소모하지 않겠다는 뜻으로 false 리턴
+            //SAM 변환으로 메소드의 코드를 축약했다면.. return 키워드도 생략해야만 함.
+            false
+
+        }
+
+        //단축 검색어 choice 버튼들에 클릭이벤트 리스너 처리하기
+        setChoiceButtonsListener()
+
         //내 위치정보 제공에 대한 사용자 동적 퍼미션 
         val permissions:Array<String> = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
         if(checkSelfPermission(permissions[0])==PackageManager.PERMISSION_DENIED){
@@ -118,11 +147,89 @@ class MainActivity : AppCompatActivity() {
     
     //카카오 키워드 로컬 장소 검색 API 작업 기능 메소드 
     private fun searchPlaces(){
-        
+
         //검색에 필요한 요청변수들.. 확인 [검색어, 내 위치 좌표] 
         Toast.makeText(this, " ${searchQuery} : ${mylocation?.latitude} , ${mylocation?.longitude}", Toast.LENGTH_SHORT).show()
+
+        //Kakao keyword search API... base url 레트로핏 객체 생성
+        val retrofit=RetrofitHelper.getRetrofitInstance("https://dapi.kakao.com")
+        val retrofitApiService=retrofit.create(RetrofitApiService::class.java)
+        retrofitApiService.searchPlaces(searchQuery,mylocation?.longitude.toString(),mylocation?.latitude.toString())
+            .enqueue(object:retrofit2.Callback<KakaoSearchPlaceResponse>{
+                override fun onResponse(
+                    call: Call<KakaoSearchPlaceResponse>,
+                    response: Response<KakaoSearchPlaceResponse>
+                ) {
+                    //응답된 json 문자열을 파싱한 객체 참조하기
+                     searchPlaceResponse=response.body()
+
+                    //먼저 데이터가 온전히 잘 왔는지 파악하기 위해
+                    var meta:PlaceMeta?=searchPlaceResponse?.meta
+                    var documents:MutableList<Place>?=searchPlaceResponse?.documents
+
+                    AlertDialog.Builder(this@MainActivity).setMessage("${meta?.total_count}\n${documents?.get(0)?.place_name}").show()
+                }
+
+                override fun onFailure(call: Call<KakaoSearchPlaceResponse>, t: Throwable) {
+                    Toast.makeText(this@MainActivity, "Server Error. \n 잠시뒤에 다시 시도해주세요", Toast.LENGTH_SHORT).show()
+                }
+
+            })
     }
-    
+
+    //단축 검색어 버튼들에 리스너를 설정하는 작업 메소드
+    private fun setChoiceButtonsListener(){
+        binding.layoutChoice.choiceWc.setOnClickListener { clickChoice(it)}
+        binding.layoutChoice.choiceMovie.setOnClickListener { clickChoice(it) }
+        binding.layoutChoice.choiceGas.setOnClickListener { clickChoice(it) }
+        binding.layoutChoice.choiceEv.setOnClickListener { clickChoice(it) }
+        binding.layoutChoice.choicePark.setOnClickListener { clickChoice(it) }
+        binding.layoutChoice.choicePharmacy.setOnClickListener { clickChoice(it) }
+        binding.layoutChoice.choiceFood.setOnClickListener { clickChoice(it) }
+        binding.layoutChoice.choice01.setOnClickListener { clickChoice(it) }
+        binding.layoutChoice.choice02.setOnClickListener { clickChoice(it) }
+        binding.layoutChoice.choice03.setOnClickListener { clickChoice(it) }
+        binding.layoutChoice.choice04.setOnClickListener { clickChoice(it) }
+        binding.layoutChoice.choice05.setOnClickListener { clickChoice(it) }
+    }
+    //이전에 선택했던 버튼의 아이디값 저장용 변수
+    var choiceID= R.id.choice_wc
+
+    private fun clickChoice(view:View){
+        // 이전에 선택되었던 뷰의 배경을 하얀배경으로 변경
+        findViewById<ImageView>(choiceID).setBackgroundResource(R.drawable.bg_choice)
+
+        // 선택한 단축 검색어 버튼의 배경그림을 변경
+        view.setBackgroundResource(R.drawable.bg_choice_selected)
+
+        // 다음번 클릭때 이전 선택 버튼의 id를 찾을 수 있도록..
+        choiceID= view.id
+
+        //선택한 뷰에 따라 검색어값을 변경
+        when (view.id){
+            R.id.choice_wc -> searchQuery="화장실"
+            R.id.choice_movie -> searchQuery="영화관"
+            R.id.choice_gas -> searchQuery="주유소"
+            R.id.choice_ev -> searchQuery="전기차충전소"
+            R.id.choice_park -> searchQuery="공원"
+            R.id.choice_pharmacy -> searchQuery="약국"
+            R.id.choice_food -> searchQuery="맛집"
+            R.id.choice_01 -> searchQuery="카페"
+            R.id.choice_02 -> searchQuery="마트"
+            R.id.choice_03 -> searchQuery="백화점"
+            R.id.choice_04 -> searchQuery="학원"
+            R.id.choice_05 -> searchQuery="야구장"
+        }
+
+        //새로운 검색 요청
+        searchPlaces()
+
+        //검색창에 검색어 글시가 있다면 지우기
+        binding.etSearch.text.clear()
+        binding.etSearch.clearFocus()
+
+
+    }
     
     
     
