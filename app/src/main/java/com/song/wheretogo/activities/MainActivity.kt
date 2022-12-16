@@ -168,6 +168,13 @@ class MainActivity : AppCompatActivity() {
                     var documents:MutableList<Place>?=searchPlaceResponse?.documents
 
                     AlertDialog.Builder(this@MainActivity).setMessage("${meta?.total_count}\n${documents?.get(0)?.place_name}").show()
+
+                    //무조건 검색이 완료되면 List Fragment를 먼저 보여주기
+                    supportFragmentManager.beginTransaction().replace(R.id.container_fragment,SearchListFragment()).commit()
+
+                    //탭버튼의 위치를 List Fragment Tab 으로 변경
+                    binding.tabLayout.getTabAt(0)?.select()
+
                 }
 
                 override fun onFailure(call: Call<KakaoSearchPlaceResponse>, t: Throwable) {
