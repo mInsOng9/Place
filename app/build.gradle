@@ -62,4 +62,7 @@ dependencies {
     //Google Fused Location API Library
     implementation 'com.google.android.gms:play-services-location:21.0.1'
 
+    //Kakao Map SDK.. library jar
+    implementation files('libs/libDaumMapAndroid.jar')
+
 }

@@ -17,21 +17,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TPPlaceSearch"
-        tools:targetApi="31">
+        tools:targetApi="31"
+        android:usesCleartextTraffic="true">
         <activity
-            android:name=".PlaceUrlActivity"
+            android:name=".activities.PlaceUrlActivity"
             android:exported="false" />
         <activity
-            android:name=".SignupActivity"
+            android:name=".activities.SignupActivity"
             android:exported="false" />
         <activity
-            android:name=".EmailLoginActivity"
+            android:name=".activities.EmailLoginActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".activities.SplashActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -41,7 +42,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="true" /> <!-- Kakao Login Redirect URI Activity -->
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
@@ -58,6 +59,10 @@
                     android:scheme="kakao5fd4eb4c8da42c7a4ebf60ecdefba7a2" />
             </intent-filter>
         </activity>
+
+        <!-- 카카오지도 사용에 대한 API 키 등록      -->
+        <meta-data android:name="com.kakao.sdk.AppKey" android:value="5fd4eb4c8da42c7a4ebf60ecdefba7a2"/>
+
     </application>
 
 </manifest>

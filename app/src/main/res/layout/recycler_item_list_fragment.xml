@@ -8,29 +8,37 @@
     app:contentPadding="16dp"
     android:layout_margin="8dp">
 
-    <TextView
-        android:id="@+id/tv_place_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="성동구청 개방 화장실"
-        android:textColor="@color/gray"
-        android:textStyle="bold"
-        android:padding="4dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tv_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="서울 성동구 왕십리로 성동구청"
-        android:padding="4dp"/>
-    <TextView
-        android:id="@+id/tv_distance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="100m"
-        android:padding="4dp"
-        android:textColor="@color/gray"
-        android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/tv_place_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="성동구청 개방 화장실"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:padding="4dp"/>
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="서울 성동구 왕십리로 성동구청"
+            android:layout_below="@id/tv_place_name"
+            android:padding="4dp"/>
 
+        <TextView
+            android:id="@+id/tv_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="100m"
+            android:layout_alignParentRight="true"
+            android:padding="4dp"
+            android:textColor="@color/gray"
+            android:textStyle="bold"/>
+
+
+    </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

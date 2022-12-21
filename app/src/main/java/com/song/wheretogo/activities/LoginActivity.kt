@@ -108,6 +108,7 @@ class LoginActivity : AppCompatActivity() {
         googleResultLauncher.launch(intent)
     }
 
+
     //구글 로그인 화면액티비티를 실행시키고 그 결과를 되돌려받는 작업을 관리하는 객체 생성
     val googleResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult(), object : ActivityResultCallback<ActivityResult>{
         override fun onActivityResult(result: ActivityResult?) {
